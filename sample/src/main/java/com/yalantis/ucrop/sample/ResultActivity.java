@@ -154,12 +154,12 @@ public class ResultActivity extends BaseActivity {
     }
 
     private void saveCroppedImage() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    getString(R.string.permission_write_storage_rationale),
-                    REQUEST_STORAGE_WRITE_ACCESS_PERMISSION);
-        } else {
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                    getString(R.string.permission_write_storage_rationale),
+//                    REQUEST_STORAGE_WRITE_ACCESS_PERMISSION);
+//        } else {
             Uri imageUri = getIntent().getData();
             if (imageUri != null && imageUri.getScheme().equals("file")) {
                 try {
@@ -174,7 +174,7 @@ public class ResultActivity extends BaseActivity {
             } else {
                 Toast.makeText(ResultActivity.this, getString(R.string.toast_unexpected_error), Toast.LENGTH_SHORT).show();
             }
-        }
+//        }
     }
 
     private void copyFileToDownloads(Uri croppedFileUri) throws Exception {
@@ -233,7 +233,8 @@ public class ResultActivity extends BaseActivity {
                 .setTicker(getString(R.string.notification_image_saved))
                 .setSmallIcon(R.drawable.ic_done)
                 .setOngoing(false)
-                .setContentIntent(PendingIntent.getActivity(this, 0, intent, 0))
+                .setContentIntent(PendingIntent.getActivity(this, 0, intent,
+                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ? PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_ONE_SHOT : PendingIntent.FLAG_ONE_SHOT))
                 .setAutoCancel(true);
         if (notificationManager != null) {
             notificationManager.notify(DOWNLOAD_NOTIFICATION_ID_DONE, notificationBuilder.build());
